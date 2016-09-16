@@ -7,6 +7,7 @@ import {
   POST_CREATE,
   POST_APPEND,
   POST_PRIVATE_LOAD,
+  POST_PRIVATE_GET,
   POST_HIDDEN,
   AUTH_LOGIN
 } from '../../constants'
@@ -49,11 +50,7 @@ function insertPost(post) {
 function* createPost(action) {
   const rawData = action.payload
   const user = Meteor.userId()
-  const post = yield call(insertPost, {
-    ...rawData,
-    createdAt: new Date(),
-    creator: user
-  })
+  const post = yield call(insertPost, rawData)
   yield put({
     type: POST_APPEND,
     payload: post
@@ -61,7 +58,11 @@ function* createPost(action) {
 }
 
 function* loadHidden() {
-  const posts = yield call(callMeteor, 'posts.hidden')
+  yield call(callMeteor, 'posts.hidden')
+  console.log('aasdafs')
+}
+function* getHidden() {
+  const posts = PostCollection.find({hidden: true}).fetch()
   if (posts.length) {
     yield put({
       type: POST_PRIVATE_LOAD,
@@ -73,6 +74,7 @@ function* loadHidden() {
 export default function* configureSaga() {
   yield [
     takeEvery(AUTH_LOGIN, loadHidden),
+    takeEvery(POST_PRIVATE_GET, getHidden),
     takeEvery(POST_CREATE, createPost),
     takeEvery(POST_LOAD_MORE, fetchMorePosts)
   ]

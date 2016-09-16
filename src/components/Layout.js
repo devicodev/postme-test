@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import Login from './Login'
 
-export default class Layout extends Component {
+class Layout extends Component {
   render() {
+    const {auth} = this.props
     return <div>
       <nav className="navbar navbar-inverse navbar-fixed-top">
         <div className="container">
@@ -19,7 +21,10 @@ export default class Layout extends Component {
             <ul className="nav navbar-nav">
               <li><a href="/posts/public">Public</a></li>
               <li><a href="/posts/public/best">Best</a></li>
-              <li><a href="/posts/private">Your</a></li>
+              {
+                auth ? <li><a href="/posts/private">Your</a></li>
+                : null
+              }
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <Login />
@@ -31,3 +36,5 @@ export default class Layout extends Component {
     </div>
   }
 }
+
+export default connect(({auth}) => ({auth}))(Layout)

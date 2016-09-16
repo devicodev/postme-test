@@ -16,6 +16,11 @@ export default class Layout extends Component {
             <a className="navbar-brand" href="#">PostMe</a>
           </div>
           <div id="navbar" className="collapse navbar-collapse">
+            <ul className="nav navbar-nav">
+              <li><a href="/posts/public">Public</a></li>
+              <li><a href="/posts/public/best">Best</a></li>
+              <li><a href="/posts/private">Your</a></li>
+            </ul>
             <ul className="nav navbar-nav navbar-right">
               <Login />
             </ul>

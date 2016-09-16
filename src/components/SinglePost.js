@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 
-class Post extends Component {
+export default class SinglePost extends Component {
   render() {
     const {title, body, votes, comments} = this.props.post
     return (
@@ -13,6 +13,7 @@ class Post extends Component {
         </div>
         <div className="panel-body">
           {body.split('\n').map((part, index) => <p key={index}>{part}</p>)}
+          <hr/>
         </div>
         <div className="panel-footer clearfix">
           <div className="pull-right">
@@ -23,5 +24,3 @@ class Post extends Component {
     )
   }
 }
-
-export default Post

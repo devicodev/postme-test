@@ -16,24 +16,16 @@ if (Meteor.isServer) {
       ],
     })
   })
+  Meteor.publish('posts:hidden', function () {
+    check(this.userId, String)
+    return PostCollection.find({
+      hidden: true,
+      creator: this.userId
+    })
+  })
 }
 
-
 Meteor.methods({
-  'posts.hidden'() {
-    if (! this.userId) {
-      throw new Meteor.Error('not-authorized')
-    }
-
-    if (Meteor.isServer) {
-      Meteor.publish('posts:hidden', function () {
-        return PostCollection.find({
-          hidden: true,
-          creator: this.userId
-        })
-      })
-    }
-  },
   'posts.insert'(post) {
 
     // Make sure the user is logged in before inserting a task
@@ -78,7 +70,7 @@ Meteor.methods({
       throw new Meteor.Error('already voted')
     }
  
-    PostCollection.update(postId, { $set: { votes: [...post.votes, {
+    PostCollection.update(postId, { $set: { voteCount: post.votes.length + 1, votes: [...post.votes, {
       creator: this.userId,
       username: Meteor.users.findOne(this.userId).username 
     }] } })

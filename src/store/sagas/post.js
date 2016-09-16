@@ -60,9 +60,6 @@ function* createPost(action) {
   })
 }
 
-function* loadHidden() {
-  yield call(callMeteor, 'posts.hidden')
-}
 function* getHidden() {
   const posts = PostCollection.find({hidden: true}).fetch()
   if (posts.length) {
@@ -85,7 +82,6 @@ function* deletePost(action) {
 
 export default function* configureSaga() {
   yield [
-    takeEvery(AUTH_LOGIN, loadHidden),
     takeEvery(POST_VOTE, votePost),
     takeEvery(POST_UPDATE, updatePost),
     takeEvery(POST_DELETE, deletePost),

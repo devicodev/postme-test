@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {POST_LOAD, POST_APPEND, POST_PRIVATE_LOAD, AUTH_LOGOUT} from '../constants'
+import {POST_LOAD, POST_VOTE, POST_APPEND, POST_PRIVATE_LOAD, AUTH_LOGOUT} from '../constants'
 
 function public(state = [], action) {
   switch(action.type) {

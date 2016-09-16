@@ -1,14 +1,17 @@
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {votePost} from '../../actions/post'
 
 class Post extends Component {
   render() {
-    const {title, body, votes, comments} = this.props.post
+    const {votePost} = this.props
+    const {_id, title, body, votes, comments} = this.props.post
     return (
       <div className="panel panel-default">
         <div className="panel-heading">
           {title}
           <div className="pull-right">
-            <button className="btn btn-xs btn-default">Vote({votes.length})</button>
+            <button onClick={() => votePost(_id)} className="btn btn-xs btn-default">Vote({votes.length})</button>
           </div>
         </div>
         <div className="panel-body">
@@ -24,4 +27,7 @@ class Post extends Component {
   }
 }
 
-export default Post
+export default connect(
+  () => ({}),
+  {votePost}
+)(Post)

@@ -19,11 +19,11 @@ const bestPostSelector = createSelector(
   [getPublicPosts],
   posts => posts.slice().sort((p1, p2) => {
     if (p1.votes.length > p2.votes.length) {
-      return 1
+      return -1
     } else if (p1.votes.length == p2. votes.length) {
       return 0
     } else {
-      return -1
+      return 1
     }
   })
 )

@@ -4,6 +4,7 @@ import {Meteor} from 'meteor/meteor'
 import {
   POST_LOAD_MORE,
   POST_LOAD,
+  POST_VOTE,
   POST_CREATE,
   POST_APPEND,
   POST_PRIVATE_LOAD,
@@ -71,9 +72,14 @@ function* getHidden() {
   }
 }
 
+function* votePost(action) {
+  yield call(callMeteor, 'posts.vote', action.payload.postId)
+}
+
 export default function* configureSaga() {
   yield [
     takeEvery(AUTH_LOGIN, loadHidden),
+    takeEvery(POST_VOTE, votePost),
     takeEvery(POST_PRIVATE_GET, getHidden),
     takeEvery(POST_CREATE, createPost),
     takeEvery(POST_LOAD_MORE, fetchMorePosts)

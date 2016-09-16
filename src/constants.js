@@ -3,6 +3,7 @@ export const AUTH_LOGIN = 'AUTH_LOGIN'
 export const AUTH_LOGOUT = 'AUTH_LOGOUT'
 
 export const POST_LOAD = 'POST_LOAD'
+export const POST_VOTE = 'POST_VOTE'
 export const POST_PUBLIC = 'public'
 export const POST_HIDDEN = 'hidden'
 export const POST_PRIVATE_LOAD = 'POST_PRIVATE_LOAD'

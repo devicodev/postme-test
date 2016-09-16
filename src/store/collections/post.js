@@ -62,6 +62,9 @@ Meteor.methods({
       throw new Meteor.Error('already voted')
     }
  
-    PostCollection.update(postId, { $set: { votes: [...post.votes, {creator: this.userId}] } })
+    PostCollection.update(postId, { $set: { votes: [...post.votes, {
+      creator: this.userId,
+      username: Meteor.users.findOne(this.userId).username 
+    }] } })
   },
 });

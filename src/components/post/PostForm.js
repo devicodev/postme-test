@@ -7,6 +7,8 @@ class PostForm extends Component {
     e.preventDefault()
     const {title, body, hidden} = this.refs
     const data = {
+      votes: [],
+      voteCount: 0,
       ...(this.props.post || {}),
       title: title.value,
       body: body.value,

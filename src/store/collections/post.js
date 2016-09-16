@@ -36,6 +36,7 @@ Meteor.methods({
     return PostCollection.insert({
       ...post,
       votes: [],
+      voteCount: 0,
       comments: [],
       createdAt: new Date(),
       creator: this.userId,

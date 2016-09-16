@@ -14,6 +14,11 @@ class PostContainer extends Component {
         {this.props.posts.map(post => post.edit 
           ? <PostForm onSave={updatePost.bind(null, post._id)} post={post} key={post._id} />
           : <Post post={post} key={post._id} />)}
+        {
+          this.props.hasMore
+          ? <button onClick={this.props.loadMore} className="btn btn-default">Load more</button>
+          : null
+        }
       </div>
     )
   }

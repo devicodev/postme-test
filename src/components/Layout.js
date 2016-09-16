@@ -23,7 +23,7 @@ class Layout extends Component {
               <li><a onClick={e => e.preventDefault() || push("/posts/public")}>Public</a></li>
               <li><a onClick={e => e.preventDefault() || push("/posts/public/best")}>Best</a></li>
               {
-                auth ? <li><a onClick={e => e.preventDefault() || push("/posts/private")}>Your</a></li>
+                auth ? <li><a onClick={e => e.preventDefault() || push("/posts/private")}>Private</a></li>
                 : null
               }
             </ul>

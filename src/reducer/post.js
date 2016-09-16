@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux'
 import {
   POST_LOAD,
+  POST_BEST_LOAD,
   POST_VOTE,
   POST_APPEND,
   POST_PRIVATE_LOAD,
@@ -19,6 +20,7 @@ function vote(state, postId, vote) {
   }
   post = {
     ...post,
+    voteCount: post.votes.length + 1,
     votes: [...post.votes, vote]
   }
   return [
@@ -56,15 +58,15 @@ function update(hidden, state, postId, data) {
         ...state,
         {
           ...data,
-          hidden: false
+          edit: false
         }
       ].sort((p1, p2) => {//Place with correct position
         if (p1.createdAt > p2.createdAt) {
-          return 1
+          return -1
         } else if (p1.createdAt == p2.createdAt) {
           return 0
         } else {
-          return -1
+          return 1
         }
       })
     }
@@ -119,7 +121,7 @@ function public(state = [], action) {
   switch(action.type) {
     case POST_APPEND:
       if (!action.payload.hidden) {
-        return [...state, action.payload]
+        return [action.payload, ...state]
       } else {
         return state
       }
@@ -134,6 +136,40 @@ function public(state = [], action) {
     case POST_DELETE:
       return deletePost(state, action.payload.postId, action.payload.user)
     default: 
+      return state
+  }
+}
+
+const sortByVotes = (p1, p2) => {
+  if (p1.voteCount > p2.voteCount) {
+    return 1
+  } else if (p1.voteCount == p2.voteCount) {
+    return 0
+  } else {
+    return -1
+  }
+}
+
+function best(state = [], action) {
+  switch(action.type) {
+    case POST_APPEND:
+      if (!action.payload.hidden) {
+        return [...state, action.payload].sort(sortByVotes)
+      } else {
+        return state
+      }
+    case POST_BEST_LOAD:
+      //TODO: Is it really needed
+      return [...state, ...action.payload].sort(sortByVotes)
+    case POST_VOTE:
+      return vote(state, action.payload.postId, action.payload.vote).sort(sortByVotes)
+    case POST_EDIT:
+      return editMode(state, action.payload.postId, action.payload.user)
+    case POST_UPDATE:
+      return update(false, state, action.payload.postId, action.payload.data).sort(sortByVotes)
+    case POST_DELETE:
+      return deletePost(state, action.payload.postId, action.payload.user)
+    default:
       return state
   }
 }
@@ -163,7 +199,13 @@ function hidden(state = [], action) {
   }
 }
 
+const publicHasMore = (state = true, event) => (event.type === POST_LOAD ? event.hasMore : state)
+const bestHasMore = (state = true, event) => (event.type === POST_BEST_LOAD ? event.hasMore : state)
+
 export default combineReducers({
   public,
+  best,
+  publicHasMore,
+  bestHasMore,
   hidden
 })

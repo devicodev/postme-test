@@ -1,5 +1,13 @@
 import {Meteor} from 'meteor/meteor'
-import {POST_CREATE, POST_VOTE, POST_EDIT, POST_UPDATE, POST_DELETE} from '../constants'
+import {
+  POST_CREATE,
+  POST_VOTE,
+  POST_EDIT,
+  POST_UPDATE,
+  POST_DELETE,
+  POST_LOAD_MORE,
+  POST_BEST_LOAD_MORE
+} from '../constants'
 
 export function createPost(payload) {
   return {
@@ -48,5 +56,11 @@ export function deletePost(postId) {
       postId,
       user: Meteor.userId()
     }
+  }
+}
+
+export function loadMore(best) {
+  return {
+    type: best ? POST_BEST_LOAD_MORE : POST_LOAD_MORE
   }
 }

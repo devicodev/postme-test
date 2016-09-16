@@ -12,6 +12,7 @@ import Layout from './components/Layout'
 import PublicPost from './components/PublicPost'
 import HiddenPost from './components/HiddenPost'
 import BestPost from './components/BestPost'
+import SinglePost from './components/SinglePost'
 
 export default function Root() {
   const store = configureStore()
@@ -31,6 +32,7 @@ export default function Root() {
           <Route path="posts/public" component={PublicPost} />
           <Route path="posts/public/best" component={BestPost} />
           <Route path="posts/private"  onEnter={auth} component={HiddenPost} />
+          <Route path="posts/:id" component={SinglePost} />
         </Route>
       </Router>
     </Provider>

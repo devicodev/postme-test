@@ -2,8 +2,10 @@ import {takeEvery} from 'redux-saga'
 import {fork, call, select, put} from 'redux-saga/effects'
 import {Meteor} from 'meteor/meteor'
 import {
-  POST_LOAD_MORE,
   POST_LOAD,
+  POST_BEST_LOAD,
+  POST_LOAD_MORE,
+  POST_BEST_LOAD_MORE,
   POST_VOTE,
   POST_CREATE,
   POST_APPEND,
@@ -28,19 +30,45 @@ function callMeteor(action, ...data) {
 
 function* fetchMorePosts() {
   const alreadyLoaded = yield select(state => state.post.public.length)
-  const user = Meteor.userId()
   const posts = PostCollection.find(
     {
       hidden: false
     },
     {
       skip: alreadyLoaded,
-      limit: 10
+      limit: 11,
+      sort: {
+        createdAt: -1
+      }
     }
   ).fetch()
+  const hasMore = !!posts[10] //Hack to prevent making two different queries: one for count, another for getting
   yield put({
     type: POST_LOAD,
-    payload: posts
+    hasMore,
+    payload: posts.slice(0, 10)
+  })
+}
+
+function* fetchBestPosts() {
+  const alreadyLoaded = yield select(state => state.post.best.length)
+  const posts = PostCollection.find(
+    {
+      hidden: false
+    },
+    {
+      skip: alreadyLoaded,
+      limit: 11,
+      sort: {
+        voteCount: -1
+      }
+    }
+  ).fetch()
+  const hasMore = !!posts[10] //Hack to prevent making two different queries: one for count, another for getting
+  yield put({
+    type: POST_BEST_LOAD,
+    hasMore,
+    payload: posts.slice(0, 10)
   })
 }
 
@@ -87,6 +115,7 @@ export default function* configureSaga() {
     takeEvery(POST_DELETE, deletePost),
     takeEvery(POST_PRIVATE_GET, getHidden),
     takeEvery(POST_CREATE, createPost),
-    takeEvery(POST_LOAD_MORE, fetchMorePosts)
+    takeEvery(POST_LOAD_MORE, fetchMorePosts),
+    takeEvery(POST_BEST_LOAD_MORE, fetchBestPosts)
   ]
 }

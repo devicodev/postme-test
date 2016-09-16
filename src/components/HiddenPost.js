@@ -21,5 +21,6 @@ const hiddenPostSelector = createSelector(
 )
 
 export default connect(state => ({
-  posts: hiddenPostSelector(state)
+  posts: hiddenPostSelector(state),
+  hasMore: false
 }))(HiddenPost)

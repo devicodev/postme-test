@@ -10,6 +10,7 @@ import {
   POST_PRIVATE_LOAD,
   POST_PRIVATE_GET,
   POST_UPDATE,
+  POST_DELETE,
   POST_HIDDEN,
   AUTH_LOGIN
 } from '../../constants'
@@ -78,12 +79,16 @@ function* votePost(action) {
 function* updatePost(action) {
   yield call(callMeteor, 'posts.update', action.payload.postId, action.payload.data)
 }
+function* deletePost(action) {
+  yield call(callMeteor, 'posts.remove', action.payload.postId)
+}
 
 export default function* configureSaga() {
   yield [
     takeEvery(AUTH_LOGIN, loadHidden),
     takeEvery(POST_VOTE, votePost),
     takeEvery(POST_UPDATE, updatePost),
+    takeEvery(POST_DELETE, deletePost),
     takeEvery(POST_PRIVATE_GET, getHidden),
     takeEvery(POST_CREATE, createPost),
     takeEvery(POST_LOAD_MORE, fetchMorePosts)

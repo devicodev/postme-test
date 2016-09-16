@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Meteor} from 'meteor/meteor'
-import {votePost, editPost} from '../../actions/post'
+import {votePost, editPost, deletePost} from '../../actions/post'
 
 class Post extends Component {
   render() {
-    const {votePost, editPost} = this.props
+    const {votePost, editPost, deletePost} = this.props
     const {_id, creator, title, body, votes, comments} = this.props.post
     const userId = Meteor.userId()
     const own = userId == creator
@@ -26,7 +26,7 @@ class Post extends Component {
             own
             ? <div className="btn-group">
                 <button className="btn btn-xs btn-default" onClick={() => editPost(_id)}>Edit</button>
-                <button className="btn btn-xs btn-danger">Delete</button>
+                <button className="btn btn-xs btn-danger" onClick={() => deletePost(_id)}>Delete</button>
               </div>
             : null 
           }
@@ -41,5 +41,5 @@ class Post extends Component {
 
 export default connect(
   () => ({}),
-  {votePost, editPost}
+  {votePost, editPost, deletePost}
 )(Post)

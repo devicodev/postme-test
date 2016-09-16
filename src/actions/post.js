@@ -1,5 +1,5 @@
 import {Meteor} from 'meteor/meteor'
-import {POST_CREATE, POST_VOTE, POST_EDIT, POST_UPDATE} from '../constants'
+import {POST_CREATE, POST_VOTE, POST_EDIT, POST_UPDATE, POST_DELETE} from '../constants'
 
 export function createPost(payload) {
   return {
@@ -37,6 +37,16 @@ export function updatePost(postId, data) {
     payload: {
       postId,
       data
+    }
+  }
+}
+
+export function deletePost(postId) {
+  return {
+    type: POST_DELETE,
+    payload: {
+      postId,
+      user: Meteor.userId()
     }
   }
 }

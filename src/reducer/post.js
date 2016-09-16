@@ -101,6 +101,20 @@ function update(hidden, state, postId, data) {
   ]
 }
 
+function deletePost(state, postId, user) {
+  const index = state.findIndex(post => post._id == postId)
+  if (index == -1) return state
+  let post = state[index]
+  if (post.creator == user) {
+    return [
+      ...state.slice(0, index),
+    ...state.slice(index + 1, state.length)
+    ]
+  } else {
+    return state
+  }
+}
+
 function public(state = [], action) {
   switch(action.type) {
     case POST_APPEND:
@@ -117,6 +131,8 @@ function public(state = [], action) {
       return editMode(state, action.payload.postId, action.payload.user)
     case POST_UPDATE:
       return update(false, state, action.payload.postId, action.payload.data)
+    case POST_DELETE:
+      return deletePost(state, action.payload.postId, action.payload.user)
     default: 
       return state
   }
@@ -138,6 +154,8 @@ function hidden(state = [], action) {
       return editMode(state, action.payload.postId, action.payload.user)
     case POST_UPDATE:
       return update(true, state, action.payload.postId, action.payload.data)
+    case POST_DELETE:
+      return deletePost(state, action.payload.postId, action.payload.user)
     case AUTH_LOGOUT:
       return []
     default: 

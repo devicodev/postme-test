@@ -5,7 +5,8 @@ import thunk from 'redux-thunk'
 import auth from './auth'
 import meteor from './meteor'
 import reducers from '../reducer'
-import {routerReducer} from 'react-router-redux'
+import {browserHistory} from 'react-router'
+import {routerReducer, routerMiddleware} from 'react-router-redux'
 import configurePostSaga from './sagas/post'
 
 function* logActions() {
@@ -26,10 +27,11 @@ export default function configureStore(preloadedState) {
     routing: routerReducer
   })
   const sagaMiddleware = createSagaMiddleware()
+  const router = routerMiddleware(browserHistory)
   const store = createStore(reducer, preloadedState, compose(
     auth,
     meteor,
-    applyMiddleware(thunk, sagaMiddleware),
+    applyMiddleware(router, thunk, sagaMiddleware),
     window.devToolsExtension ? window.devToolsExtension(): next => next
   ))
   sagaMiddleware.run(rootSaga, store)

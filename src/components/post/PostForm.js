@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {createPost} from '../../actions/post'
 
 class PostForm extends Component {
 
@@ -8,28 +7,30 @@ class PostForm extends Component {
     e.preventDefault()
     const {title, body, hidden} = this.refs
     const data = {
+      ...(this.props.post || {}),
       title: title.value,
       body: body.value,
       hidden: hidden.checked
     }
-    this.props.createPost(data)
+    this.props.onSave(data)
   }
 
   render() {
     if (!this.props.auth) {
       return <div />
     }
+    const {post = {}} = this.props
     return (
         <form className="panel panel-default" onSubmit={e => this.onSubmit(e)}>
           <div className="panel-heading">
-            <input type="text" className="form-control" ref="title" placeholder="Title" />
+            <input type="text" className="form-control" defaultValue={post.title} ref="title" placeholder="Title" />
           </div>
           <div className="panel-body">
-            <textarea type="password" className="form-control" ref="body" placeholder="Body" />
+            <textarea type="password" className="form-control" defaultValue={post.body} ref="body" placeholder="Body" />
           </div>
           <div className="panel-footer">
             <label>
-              <input type="checkbox" ref="hidden" /> Private
+              <input type="checkbox" ref="hidden" defaultChecked={post.hidden} /> Private
             </label>
             <div className="pull-right">
               <button type="submit" className="btn btn-xs btn-default">Submit</button>
@@ -41,6 +42,5 @@ class PostForm extends Component {
 }
 
 export default connect(
-  ({auth}) => ({auth}),
-  {createPost}
+  ({auth}) => ({auth})
 )(PostForm)

@@ -50,9 +50,25 @@ Meteor.methods({
       username: Meteor.users.findOne(this.userId).username
     })
   },
+  'posts.update'(postId, data) {
+    check(postId, String)
+    let post = PostCollection.findOne(postId)
+    if (!this.userId || post.creator != this.userId) {
+      throw new Meteor.Error('not-authorized')
+    }
+    PostCollection.update(postId, { $set: {
+      title: data.title,
+      body: data.body,
+      hidden: data.hidden
+    }})
+  },
   'posts.remove'(postId) {
-    check(postId, String);
- 
+    check(postId, String)
+    const post = PostCollection.findOne(postId)
+    if (!this.userId || post.creator != this.userId) {
+      throw new Meteor.Error('not-authorized')
+    }
+
     PostCollection.remove(postId)
   },
   'posts.vote'(postId) {

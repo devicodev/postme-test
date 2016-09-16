@@ -1,4 +1,5 @@
-import {POST_CREATE, POST_VOTE} from '../constants'
+import {Meteor} from 'meteor/meteor'
+import {POST_CREATE, POST_VOTE, POST_EDIT, POST_UPDATE} from '../constants'
 
 export function createPost(payload) {
   return {
@@ -11,7 +12,31 @@ export function votePost(postId) {
   return {
     type: POST_VOTE,
     payload: {
-      postId
+      postId,
+      vote: {
+        creator: Meteor.userId(),
+        username: Meteor.users.findOne(Meteor.userId()).username 
+      }
+    }
+  }
+}
+
+export function editPost(postId) {
+  return {
+    type: POST_EDIT,
+    payload: {
+      postId,
+      user: Meteor.userId()
+    }
+  }
+}
+
+export function updatePost(postId, data) {
+  return {
+    type: POST_UPDATE,
+    payload: {
+      postId,
+      data
     }
   }
 }

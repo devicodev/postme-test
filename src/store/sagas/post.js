@@ -9,6 +9,7 @@ import {
   POST_APPEND,
   POST_PRIVATE_LOAD,
   POST_PRIVATE_GET,
+  POST_UPDATE,
   POST_HIDDEN,
   AUTH_LOGIN
 } from '../../constants'
@@ -60,7 +61,6 @@ function* createPost(action) {
 
 function* loadHidden() {
   yield call(callMeteor, 'posts.hidden')
-  console.log('aasdafs')
 }
 function* getHidden() {
   const posts = PostCollection.find({hidden: true}).fetch()
@@ -75,11 +75,15 @@ function* getHidden() {
 function* votePost(action) {
   yield call(callMeteor, 'posts.vote', action.payload.postId)
 }
+function* updatePost(action) {
+  yield call(callMeteor, 'posts.update', action.payload.postId, action.payload.data)
+}
 
 export default function* configureSaga() {
   yield [
     takeEvery(AUTH_LOGIN, loadHidden),
     takeEvery(POST_VOTE, votePost),
+    takeEvery(POST_UPDATE, updatePost),
     takeEvery(POST_PRIVATE_GET, getHidden),
     takeEvery(POST_CREATE, createPost),
     takeEvery(POST_LOAD_MORE, fetchMorePosts)
